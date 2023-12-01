@@ -1,4 +1,5 @@
 DAY ?= 1
+PART ?= 3
 
 .PHONY: day
 day: day$(DAY) day$(DAY)/input.txt
@@ -15,7 +16,7 @@ day$(DAY)/input.txt:
 run: runday$(DAY)
 
 runday$(DAY):
-	go run day$(DAY)/main.go
+	go run day$(DAY)/main.go -p $(PART)
 
 .PHONY: test
 test: testday$(DAY)
