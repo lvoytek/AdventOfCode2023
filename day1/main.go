@@ -4,6 +4,9 @@ import (
 	_ "embed"
 	"flag"
 	"fmt"
+	"regexp"
+	"strconv"
+	"strings"
 
 	"github.com/lvoytek/AdventOfCode2023/util"
 )
@@ -26,10 +29,57 @@ func main() {
 }
 
 func Part1(input string) string {
-	lines := util.MatrixOfCharacters(input)
-	return string(lines[0][0])
+	lines := util.ListofLines(input)
+	total := 0
+
+	for _, line := range lines {
+		re := regexp.MustCompile(`\d`)
+		match := re.FindAllString(line, -1)
+
+		if len(match) > 0 {
+			nextVal, _ := strconv.Atoi(match[0] + match[len(match)-1])
+			total += nextVal
+		}
+	}
+
+	return fmt.Sprint(total)
 }
 
 func Part2(input string) string {
-	return input
+	lines := util.ListofLines(input)
+	total := 0
+
+	digitsSpelledOut := []string{"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
+
+	for _, line := range lines {
+		re := regexp.MustCompile(`\d|` + strings.Join(digitsSpelledOut, "|"))
+
+		if len(line) > 0 {
+			firstDigit := re.FindString(line)
+			secondDigit := ""
+
+			for i := len(line) - 1; i >= 0; i-- {
+				secondDigit = re.FindString(line[i:])
+
+				if secondDigit != "" {
+					break
+				}
+			}
+
+			for i, spelledDigit := range digitsSpelledOut {
+				if firstDigit == spelledDigit {
+					firstDigit = fmt.Sprint(i)
+				}
+
+				if secondDigit == spelledDigit {
+					secondDigit = fmt.Sprint(i)
+				}
+			}
+
+			nextVal, _ := strconv.Atoi(firstDigit + secondDigit)
+			total += nextVal
+		}
+	}
+
+	return fmt.Sprint(total)
 }
