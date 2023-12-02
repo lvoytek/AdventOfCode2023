@@ -23,7 +23,7 @@ func Test_Part2(t *testing.T) {
 	t.Run("Part 2", func(t *testing.T) {
 		actual := Part2(part2Example)
 		if actual != part2Expected {
-			t.Errorf("Expected: %v, Actual: %v", part1Expected, actual)
+			t.Errorf("Expected: %v, Actual: %v", part2Expected, actual)
 		}
 	})
 }
