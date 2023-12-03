@@ -26,8 +26,9 @@ func main() {
 }
 
 func Part1(input string) string {
-	lines := util.MatrixOfCharacters(input)
-	return string(lines[0][0])
+	lines := util.ListofLines(input)
+	val := util.GetFirstIntInString(lines[0])
+	return fmt.Sprint(val)
 }
 
 func Part2(input string) string {
