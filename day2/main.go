@@ -70,7 +70,7 @@ func extractGame(line string) Game {
 }
 
 func Part1(input string) string {
-	lines := util.ListofLines(input)
+	lines := util.ListOfLines(input)
 
 	const maxRed = 12
 	const maxGreen = 13
@@ -100,7 +100,7 @@ func Part1(input string) string {
 }
 
 func Part2(input string) string {
-	lines := util.ListofLines(input)
+	lines := util.ListOfLines(input)
 
 	sumOfPower := 0
 

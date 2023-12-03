@@ -26,7 +26,7 @@ func main() {
 }
 
 func Part1(input string) string {
-	lines := util.ListofLines(input)
+	lines := util.ListOfLines(input)
 	val := util.GetFirstIntInString(lines[0])
 	return fmt.Sprint(val)
 }

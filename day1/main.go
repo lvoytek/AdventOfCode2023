@@ -29,7 +29,7 @@ func main() {
 }
 
 func Part1(input string) string {
-	lines := util.ListofLines(input)
+	lines := util.ListOfLines(input)
 	total := 0
 
 	for _, line := range lines {
@@ -46,7 +46,7 @@ func Part1(input string) string {
 }
 
 func Part2(input string) string {
-	lines := util.ListofLines(input)
+	lines := util.ListOfLines(input)
 	total := 0
 
 	digitsSpelledOut := []string{"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}

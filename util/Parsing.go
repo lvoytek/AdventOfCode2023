@@ -5,7 +5,7 @@ import (
 )
 
 /* Return file contents as a list of strings containing each line */
-func ListofLines(input string) (lines []string) {
+func ListOfLines(input string) (lines []string) {
 	for _, line := range(strings.Split(input, "\n")) {
 		if len(line) > 0 {
 			lines = append(lines, line)
