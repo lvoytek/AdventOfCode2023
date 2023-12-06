@@ -15,6 +15,24 @@ func ListOfLines(input string) (lines []string) {
 	return lines
 }
 
+/* Return a list of lists of lines split by empty space lines */
+func ListOfLineChunks(input string) (chunks [][]string) {
+	var nextChunk []string
+
+	for _, line := range(strings.Split(input, "\n")) {
+		if len(line) > 0 {
+			nextChunk = append(nextChunk, line)
+		} else {
+			if len(nextChunk) > 0 {
+				chunks = append(chunks, nextChunk)
+				nextChunk = []string{}
+			}
+		}
+	}
+
+	return chunks
+}
+
 /* Return file contents as a matrix of runes */
 func MatrixOfCharacters(input string) (matrix [][]rune) {
 	for _, line := range(strings.Split(input, "\n")) {
