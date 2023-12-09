@@ -7,14 +7,14 @@ import (
 
 /* Get the first positive integer in a string*/
 func GetFirstIntInString(input string) int {
-	intRe := regexp.MustCompile(`(\d+)`)
+	intRe := regexp.MustCompile(`(-?\d+)`)
 	result, _ := strconv.Atoi(intRe.FindString(input))
 	return result
 }
 
 /* Get all positive integers in a string */
 func GetAllIntsInString(input string) []int {
-	intRe := regexp.MustCompile(`(\d+)`)
+	intRe := regexp.MustCompile(`(-?\d+)`)
 	resultStrings := intRe.FindAllString(input, -1)
 
 	var result []int
