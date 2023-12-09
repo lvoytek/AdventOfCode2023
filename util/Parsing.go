@@ -67,3 +67,14 @@ func MatrixOfDigits(input string, nonDigits int) (matrix [][]int) {
 
 	return matrix
 }
+
+/* Return file contents as a matrix of integers */
+func MatrixOfInts(input string) (matrix [][]int) {
+	for _, line := range(strings.Split(input, "\n")) {
+		if len(line) > 0 {
+			matrix = append(matrix, GetAllIntsInString(line))
+		}
+	}
+
+	return matrix
+}
