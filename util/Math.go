@@ -11,3 +11,11 @@ func Gcd(x, y int) int {
 func Lcm(x, y int) int {
 	return x * y / Gcd(x, y)
 }
+
+func AbsInt(x int) int {
+	if x < 0 {
+		x *= -1
+	}
+
+	return x
+}
