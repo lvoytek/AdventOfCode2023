@@ -27,11 +27,13 @@ func main() {
 	}
 }
 
+// Location on the map
 type Coord struct {
 	row int
 	col int
 }
 
+// A single pipe in a given location with connections
 type Pipe struct {
 	pipeType rune
 	location Coord
@@ -39,6 +41,15 @@ type Pipe struct {
 	visited bool
 }
 
+// Directions for pipe route tracing
+const (
+	Up int = 0
+	Right = 1
+	Down = 2
+	Left = 3
+)
+
+/* Create a list of the pipes contained in the map */
 func createPipes(lines []string) (pipes []Pipe) {
 	for row, line := range(lines) {
 		for col, item := range(line) {
@@ -58,6 +69,7 @@ func createPipes(lines []string) (pipes []Pipe) {
 	return pipes
 }
 
+/* Find all possible locations that a given pipe can connect to */
 func getAdjacentPipeCoords(pipe Pipe) (coords []Coord) {
 	if strings.ContainsRune("|LJS", pipe.pipeType) {
 		coords = append(coords, Coord {
@@ -90,6 +102,7 @@ func getAdjacentPipeCoords(pipe Pipe) (coords []Coord) {
 	return coords
 }
 
+/* For each pipe find all other pipes actually connected to it and add them to their list */
 func connectPipes(pipes []Pipe) []Pipe {
 	for i, currentPipe := range(pipes) {
 		availableCoords := getAdjacentPipeCoords(currentPipe)
@@ -107,6 +120,7 @@ func connectPipes(pipes []Pipe) []Pipe {
 	return pipes
 }
 
+/* Recursively search through pipes to find the longest loop connected to S */
 func findLongestLoop(pipes []*Pipe) []*Pipe {
 	currentPipe := pipes[len(pipes) - 1]
 	if currentPipe.pipeType == 'S' && len(pipes) > 1 {
@@ -140,6 +154,7 @@ func findLongestLoop(pipes []*Pipe) []*Pipe {
 	return greatestPipeline
 }
 
+/* Recursively fill an empty area on the map with a given character */
 func fillArea(row int, col int, fillWith rune, cleanedMap [][]rune) [][]rune {
 	if row < 0 || row >= len(cleanedMap) || col < 0 || col >= len(cleanedMap[row]) || cleanedMap[row][col] != '.' {
 		return cleanedMap
@@ -166,7 +181,9 @@ func fillArea(row int, col int, fillWith rune, cleanedMap [][]rune) [][]rune {
 	return cleanedMap
 }
 
+/* Find distance from S to furthest away point on the longest pipe loop */
 func Part1(input string) string {
+	// Parse input and extract all pipes from the map
 	lines := util.ListOfLines(input)
 	pipes := createPipes(lines)
 	pipes = connectPipes(pipes)
@@ -180,10 +197,13 @@ func Part1(input string) string {
 		}
 	}
 
+	// Get the length of the longest loop then divide by 2 for furthest
 	return fmt.Sprint(len(findLongestLoop([]*Pipe{startPipe})) / 2)
 }
 
+/* Find the area located within the longest pipe loop */
 func Part2(input string) string {
+	// Parse input and extract all pipes from the map
 	lines := util.ListOfLines(input)
 	pipes := createPipes(lines)
 	pipes = connectPipes(pipes)
@@ -197,6 +217,7 @@ func Part2(input string) string {
 		}
 	}
 
+	// Find longest loop then remove all other pipes from the map
 	loop := findLongestLoop([]*Pipe{startPipe})
 	var cleanedMap [][]rune
 
@@ -218,58 +239,55 @@ func Part2(input string) string {
 		}
 	}
 
-	//   0
-	// 3   1
-	//   2
-
+	// Trace the longest loop and fill each side with a distinct character
 	var direction int
 
 	if loop[1].location.row < loop[0].location.row {
-		direction = 0
+		direction = Up
 	} else if loop[1].location.col > loop[0].location.col {
-		direction = 1
+		direction = Right
 	} else if loop[1].location.row > loop[0].location.row {
-		direction = 2
+		direction = Down
 	} else {
-		direction = 3
+		direction = Left
 	}
 
 	for _, pipe := range(loop) {
 		prevDirection := direction
 
 		if pipe.pipeType == 'L' {
-			if direction == 3 {
-				direction = 0
-			} else if direction == 2 {
-				direction = 1
+			if direction == Left {
+				direction = Up
+			} else if direction == Down {
+				direction = Right
 			}
 		} else if pipe.pipeType == 'J' {
-			if direction == 1 {
-				direction = 0
-			} else if direction == 2 {
-				direction = 3
+			if direction == Right {
+				direction = Up
+			} else if direction == Down {
+				direction = Left
 			}
 		} else if pipe.pipeType == '7' {
-			if direction == 1 {
-				direction = 2
-			} else if direction == 0 {
-				direction = 3
+			if direction == Right {
+				direction = Down
+			} else if direction == Up {
+				direction = Left
 			}
 		} else if pipe.pipeType == 'F' {
-			if direction == 0 {
-				direction = 1
-			} else if direction == 3 {
-				direction = 2
+			if direction == Up {
+				direction = Right
+			} else if direction == Left {
+				direction = Down
 			}
 		}
 
-		if direction == 0 {
+		if direction == Up {
 			cleanedMap = fillArea(pipe.location.row, pipe.location.col - 1, 'A', cleanedMap)
 			cleanedMap = fillArea(pipe.location.row, pipe.location.col + 1, 'B', cleanedMap)
-		} else if direction == 1 {
+		} else if direction == Right {
 			cleanedMap = fillArea(pipe.location.row - 1, pipe.location.col, 'A', cleanedMap)
 			cleanedMap = fillArea(pipe.location.row + 1, pipe.location.col, 'B', cleanedMap)
-		} else if direction == 2 {
+		} else if direction == Down {
 			cleanedMap = fillArea(pipe.location.row, pipe.location.col + 1, 'A', cleanedMap)
 			cleanedMap = fillArea(pipe.location.row, pipe.location.col - 1, 'B', cleanedMap)
 		} else {
@@ -278,13 +296,13 @@ func Part2(input string) string {
 		}
 
 		if prevDirection != direction {
-			if prevDirection == 0 {
+			if prevDirection == Up {
 				cleanedMap = fillArea(pipe.location.row, pipe.location.col - 1, 'A', cleanedMap)
 				cleanedMap = fillArea(pipe.location.row, pipe.location.col + 1, 'B', cleanedMap)
-			} else if prevDirection == 1 {
+			} else if prevDirection == Right {
 				cleanedMap = fillArea(pipe.location.row - 1, pipe.location.col, 'A', cleanedMap)
 				cleanedMap = fillArea(pipe.location.row + 1, pipe.location.col, 'B', cleanedMap)
-			} else if prevDirection == 2 {
+			} else if prevDirection == Down {
 				cleanedMap = fillArea(pipe.location.row, pipe.location.col + 1, 'A', cleanedMap)
 				cleanedMap = fillArea(pipe.location.row, pipe.location.col - 1, 'B', cleanedMap)
 			} else {
@@ -294,6 +312,7 @@ func Part2(input string) string {
 		}
 	}
 
+	// Determine which side is the inside
 	lookFor := 'A'
 
 	for _, location := range(cleanedMap[0]) {
@@ -303,6 +322,7 @@ func Part2(input string) string {
 		}
 	}
 
+	// Count the internal area
 	totalInside := 0
 
 	for _, line := range(cleanedMap) {
