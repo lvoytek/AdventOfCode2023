@@ -26,12 +26,14 @@ func main() {
 	}
 }
 
+// A node with a given name and its left and right connections
 type Node struct {
 	name string
 	left string
 	right string
 }
 
+/* Extract a node and its connections from a line of input */
 func extractNode(line string) Node {
 	re := regexp.MustCompile(`(\w{3}) = \((\w{3}), (\w{3})\)`)
 	matches := re.FindAllStringSubmatch(line, -1)
@@ -43,10 +45,12 @@ func extractNode(line string) Node {
 	}
 }
 
+/* Find # of steps to get from AAA to ZZZ with given instructions */
 func Part1(input string) string {
 	lines := util.ListOfLineChunks(input)
 	instructions := lines[0][0]
 
+	// Create a map of node names to nodes in data set
 	nodes := make(map[string]Node)
 
 	for _, line := range(lines[1]) {
@@ -54,6 +58,7 @@ func Part1(input string) string {
 		nodes[newNode.name] = newNode
 	}
 
+	// Count instructions while following path from AAA to ZZZ
 	instructionIndex := 0
 	currentNode := "AAA"
 	instructionCount := 0
@@ -80,10 +85,12 @@ func Part1(input string) string {
 	return fmt.Sprint(instructionCount)
 }
 
+/* Find # of steps to get from all **A nodes to **Z's all at the same time */
 func Part2(input string) string {
 	lines := util.ListOfLineChunks(input)
 	instructions := lines[0][0]
 
+	// Create a map of node names to nodes in data set
 	nodes := make(map[string]Node)
 
 	for _, line := range(lines[1]) {
@@ -91,6 +98,7 @@ func Part2(input string) string {
 		nodes[newNode.name] = newNode
 	}
 
+	// Find all starting nodes
 	var currentNodes []string
 	for k, _ := range(nodes) {
 		if k[len(k) - 1] == 'A' {
@@ -98,6 +106,7 @@ func Part2(input string) string {
 		}
 	}
 
+	// Find min number of instructions to get from **A to **Z for each start
 	var instructionCounts []int
 
 	for _, currentNode := range(currentNodes) {
@@ -126,6 +135,7 @@ func Part2(input string) string {
 		instructionCounts = append(instructionCounts, instructionCount)
 	}
 
+	// Find when all nodes are at **Z using least common multiple
 	minInstructionCount := 1
 
 	for _, instructionCount := range(instructionCounts) {
