@@ -19,3 +19,21 @@ func AbsInt(x int) int {
 
 	return x
 }
+
+func PowInt(base int, exp int) int {
+	out := 1
+	for i := 0; i < exp; i++ {
+		out *= base
+	}
+
+	return out
+}
+
+func Sum(values []int) int {
+	sum := 0
+	for _, value := range(values) {
+		sum += value
+	}
+
+	return sum
+}
