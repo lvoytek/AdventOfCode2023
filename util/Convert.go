@@ -26,3 +26,10 @@ func GetAllIntsInString(input string) []int {
 
 	return result
 }
+
+/* Replace a string's character at an index with a different one */
+func ReplaceCharAtIndex(start string, newChar rune, index int) string {
+    end := []rune(start)
+    end[index] = newChar
+    return string(end)
+}
